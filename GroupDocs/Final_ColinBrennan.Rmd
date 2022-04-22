@@ -1,0 +1,204 @@
+---
+title: "ITMS 514 Final Project"
+author: "Sarvesh Kaushik, Jay Gupta, Colin Brennan"
+date: "4/21/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+
+library(ggplot2)
+library(ISLR)
+library(tidyverse)
+library(dplyr)
+library(tigerstats)
+library(MLmetrics)
+library(MASS)
+
+```
+
+**Input of both region's CSV**
+```{r}
+forestfireregion1 <- read.csv("region1.csv", sep = ",") 
+forestfireregion2 <- read.csv("region2.csv", sep = ",") 
+```
+
+
+**Data Preparation Region 1**
+```{r}
+dim(forestfireregion1)
+str(forestfireregion1)
+summary(forestfireregion1)
+head(forestfireregion1)
+sum(is.na(forestfireregion1))
+sum(duplicated(forestfireregion1))
+```
+
+**Data Preparation Region 2**
+```{r}
+dim(forestfireregion2)
+str(forestfireregion2)
+summary(forestfireregion2)
+head(forestfireregion2)
+sum(is.na(forestfireregion2))
+sum(duplicated(forestfireregion2))
+```
+
+**Bar Plot Region 1**
+```{r}
+# Fires Verse Not Fire 
+ggplot(data = forestfireregion1) + geom_bar(mapping = aes(x = Classes))
+
+#Fires compared with Wind Speed
+ggplot(data = forestfireregion1, aes(x = Ws)) +
+  geom_bar(aes(fill = Classes)) 
+```
+
+**EDA Region 1**
+```{r}
+ws1=forestfireregion1$Ws
+h1=hist(ws1,ylim=c(0,40))
+text(h1$mids,h1$counts,labels=h1$counts, adj=c(0.5, -0.5))
+hist(ws1,main="Maximum daily Wind Speed",xlab="Wind Speed",xlim=c(0,30),col="darkmagenta",freq=FALSE)
+boxplot(ï..day~Ws,data=forestfireregion1,main="Measure of wind speed per day",xlab="Wind Speed",ylab="Days")
+boxplot(Rain~Ws,data=forestfireregion1,main="Measure of rain according to the wind speed",xlab="Wind Speed",ylab="Rain")
+ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes),bins = 30)
+```
+
+
+**EDA Region 2**
+```{r}
+ws2=forestfireregion2$Ws
+h2=hist(ws2,ylim=c(0,70))
+text(h2$mids,h2$counts,labels=h2$counts, adj=c(0.5, -0.5))
+hist(ws2,main="Maximum daily Wind Speed",xlab="Wind Speed",xlim=c(0,30),col="darkmagenta",freq=FALSE)
+boxplot(ï..day~Ws,data=forestfireregion2,main="Measure of wind speed per day",xlab="Wind Speed",ylab="Days")
+boxplot(Rain~Ws,data=forestfireregion2,main="Measure of rain according to the wind speed",xlab="Wind Speed",ylab="Rain")
+ggplot(data = forestfireregion2, aes(x = Ws)) +geom_histogram(aes(fill = Classes),bins = 30)
+```
+
+
+**Count Plot Fire Vs WS Region 1**
+```{r}
+ggplot(data = forestfireregion1) +
+  geom_count(mapping = aes(x = Classes, y = Ws))
+```
+
+**Count Plot Fire Vs WS Region 2**
+```{r}
+ggplot(data = forestfireregion2) +
+  geom_count(mapping = aes(x = Classes, y = Ws))
+```
+
+
+**Histogram RH Classes Region 1**
+```{r}
+ggplot(data = forestfireregion1, aes(x = RH)) +
+  geom_histogram(aes(fill = Classes), bins =10, color = "black")
+```
+
+**Histogram RH Classes Region 2**
+```{r}
+ggplot(data = forestfireregion2, aes(x = RH)) +
+  geom_histogram(aes(fill = Classes), bins =10, color = "black")
+```
+
+
+
+**Geom Point Region 1**
+```{r}
+ggplot(data = forestfireregion1) +
+  geom_point(mapping = aes(x = Rain, y = Temperature,colour = Classes))
+```
+
+**Geom Point Region 2**
+```{r}
+ggplot(data = forestfireregion2) +
+  geom_point(mapping = aes(x = Rain, y = Temperature,colour = Classes))
+```
+
+
+## Multiple Regression testing Region 1
+```{r}
+set.seed(420)
+
+i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
+
+region1Training <- forestfireregion1[i==1,]
+
+region1Testing <- forestfireregion1[i==2,]
+
+fitlm <- lm(Ws~., data=region1Training[,1:14])
+summary(fitlm)
+
+fitlm2<- lm(Ws~.-year-month-RH, data=region1Training)
+summary(fitlm2)
+
+ypred <-predict(object = fitlm2, newdata = region1Testing[,1:14])
+summary(ypred)
+```
+
+## Multiple Regression testing Region 2
+```{r}
+set.seed(420)
+i2 <- sample(2, nrow(forestfireregion2), replace=TRUE, prob=c(0.8, 0.2))
+
+region2Training <- forestfireregion2[i2==1,]
+
+region2Testing <- forestfireregion2[i2==2,]
+
+
+fitlm3 <- lm(Ws~., data=region2Training[,1:14])
+summary(fitlm3)
+
+fitlm4<- lm(Ws~.-year-month-RH, data=region2Training)
+summary(fitlm4)
+
+ypred2 <-predict(object = fitlm4, newdata = region2Testing[,1:14])
+summary(ypred2)
+
+```
+
+**Forward Step Regression Region 1**
+```{r}
+intercept_only <- lm(Ws ~ 1, data=region1Training[,1:14])
+all <- lm(Ws~., data=region1Training[,1:14])
+forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))
+forward$anova
+ypred_forward <-predict(object = forward, newdata = region1Training[,1:14])
+MAE(y_pred = ypred_forward, y_true = region1Testing$Ws)
+MSE(y_pred = ypred_forward, y_true =  region1Testing$Ws)
+```
+
+**Forward Step Regression Region 2**
+```{r}
+intercept_only <- lm(Ws ~ 1, data=region2Training[,1:14])
+all <- lm(Ws~., data=region2Training[,1:14])
+forward2 <- stepAIC (intercept_only, direction='forward',scope = formula(all))
+forward2$anova
+ypred_forward2 <-predict(object = forward2, newdata = region2Training[,1:14])
+MAE(y_pred = ypred_forward2, y_true = region2Testing$Ws)
+MSE(y_pred = ypred_forward2, y_true =  region2Testing$Ws)
+
+```
+
+**Backwards Selection**
+
+```{r}
+backward <- stepAIC (all, direction='backward')
+```
+
+
+
+```{r}
+backward$anova
+```
+
+```{r}
+summary(backward)
+```

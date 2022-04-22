@@ -1,0 +1,128 @@
+---
+title: "FinalProject"
+author: "Sarvesh Kaushik, Jay Gupta, Colin Brennan"
+date: "4/27/2022"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, include=FALSE}
+
+library(ggplot2)
+library(ISLR)
+library(tidyverse)
+library(dplyr)
+library(tigerstats)
+library(MLmetrics)
+library(MASS)
+
+```
+
+**Input of both region's CSV**
+```{r}
+forestfireregion1 <- read.csv("data/region1.csv", sep = ",") 
+forestfireregion2 <- read.csv("data/region2.csv", sep = ",") 
+```
+
+**Data Preparation Region 1**
+```{r}
+names(forestfireregion1)[names(forestfireregion1)=="ï..day"] <- "day"
+dim(forestfireregion1)
+str(forestfireregion1)
+summary(forestfireregion1)
+head(forestfireregion1)
+sum(is.na(forestfireregion1))
+sum(duplicated(forestfireregion1))
+```
+> Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values.  
+
+**Data Preparation Region 2**
+```{r}
+names(forestfireregion1)[names(forestfireregion2)=="ï..day"] <- "day"
+dim(forestfireregion2)
+str(forestfireregion2)
+summary(forestfireregion2)
+head(forestfireregion2)
+sum(is.na(forestfireregion2))
+sum(duplicated(forestfireregion2))
+```
+> Region 2 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values.  
+
+**Bar Plots Region 1**
+```{r}
+# Region 1 Classes
+ggplot(data = forestfireregion1) + geom_bar(mapping = aes(x = Classes))
+
+#Classes compared with Wind Speed
+ggplot(data = forestfireregion1, aes(x = Ws)) +
+  geom_bar(aes(fill = Classes)) 
+
+#Classes per Month
+ggplot(data = forestfireregion1, aes(x = month)) +
+  geom_bar(aes(fill = Classes)) 
+
+#Temperature VS Classes
+ggplot(data = forestfireregion1, aes(x = Temperature)) +geom_histogram(aes(fill = Classes),bins = 30)
+```
+
+**EDA Region 1 Temperature**
+```{r}
+temperature1=forestfireregion1$Temperature
+h1=hist(temperature1,ylim=c(0,40))
+text(h1$mids,h1$counts,labels=h1$counts, adj=c(0.5, -0.5))
+hist(temperature1,main="Maximum daily temperature",xlab="Temperature in degrees Fahrenheit",xlim=c(0,40),col="darkmagenta",freq=FALSE)
+boxplot(day~Temperature,data=forestfireregion1,main="Measure of temperature per day",xlab="Temperature",ylab="Days")
+boxplot(Rain~Temperature,data=forestfireregion1,main="Measure of rain according to the temperature",xlab="Temperature",ylab="Rain")
+ggplot(data = forestfireregion1, aes(x = Temperature)) +geom_histogram(aes(fill = Classes),bins = 30)
+```
+
+**EDA Region 1 Ws**
+```{r}
+ws1=forestfireregion1$Ws
+h1=hist(ws1,ylim=c(0,40))
+text(h1$mids,h1$counts,labels=h1$counts, adj=c(0.5, -0.5))
+hist(ws1,main="Maximum daily Wind Speed",xlab="Wind Speed",xlim=c(0,30),col="darkmagenta",freq=FALSE)
+boxplot(day~Ws,data=forestfireregion1,main="Measure of wind speed per day",xlab="Wind Speed",ylab="Days")
+boxplot(Rain~Ws,data=forestfireregion1,main="Measure of rain according to the wind speed",xlab="Wind Speed",ylab="Rain")
+ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes),bins = 30)
+```
+
+**Multiple Regression Testing Region 1**
+```{r}
+set.seed(420)
+i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
+Region1Training <- forestfireregion1[i==1,]
+Region1Testing<- forestfireregion1[i==2,]
+fitlm <- lm(Temperature~., data=Region1Training[,1:14])
+summary(fitlm)
+fitlm2<- lm(Temperature~.-year-month-RH, data=Region1Training)
+summary(fitlm2)
+ypred <-predict(object = fitlm2, newdata = Region1Testing[,1:14])
+summary(ypred)
+```
+
+**Forward Step Regression Testing Region 1**
+```{r}
+intercept_only <- lm(Temperature ~ 1, data=Region1Training[,1:14])
+all <- lm(Temperature~., data=Region1Training[,1:14])
+forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))
+forward$anova
+ypred_forward <-predict(object = forward, newdata = Region1Testing[,1:14])
+MAE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
+MSE(y_pred = ypred_forward, y_true =  Region1Testing$Temperature)
+```
+
+**Backwards Step Regression Testing Region 1**
+```{r}
+backward <- stepAIC (all, direction='backward')
+backward$anova
+summary(backward)
+ypred_backward <-predict(object = backward, newdata = Region1Testing[,1:14])
+MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
+MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
+```

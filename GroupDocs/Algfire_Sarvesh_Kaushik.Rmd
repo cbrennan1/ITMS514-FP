@@ -1,0 +1,214 @@
+---
+title: "AlgFire"
+author: "Sarvesh Kaushik"
+date: '2022-04-07'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+
+library(ggplot2)
+
+library(ISLR)
+library(tidyverse)
+library(dplyr)
+library(tigerstats)
+library(MLmetrics)
+library(MASS)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+
+
+
+```{r}
+alfire <- read.csv("/Users/sarveshkaushik/Desktop/ITMD 514 FInal Project/Forest FireRegion1.csv", sep = ",") 
+
+
+
+```
+
+
+
+#Data Preparation
+
+```{r}
+
+dim(forestfireregion1)
+dim(forestfireregion2)
+str(forestfireregion1)
+str(forestfireregion2)
+summary(forestfireregion1)
+summary(forestfireregion2)
+head(forestfireregion1)
+head(forestfireregion2)
+sum(is.na(forestfireregion1))
+sum(is.na(forestfireregion2))
+sum(duplicated(forestfireregion1))
+sum(duplicated(forestfireregion2))
+
+```
+
+
+## Bar Plot
+
+```{r}
+
+ggplot(data = alfire) + geom_bar(mapping = aes(x = Classes))
+
+
+ggplot(data = alfire, aes(x = month)) +
++     geom_bar(aes(fill = Classes)) 
+
+```
+
+
+#count
+```{r}
+ggplot(data = alfire) 
++     geom_count(mapping = aes(x = Classes, y = Temperature))
+```
+
+## Histogram
+
+```{r}
+
+ggplot(data = alfire, aes(x = Rain)) +
+geom_histogram(aes(fill = Classes), bins =10, color = "black")
+
+
+
+```
+
+#geom_point
+```{r}
+
+ggplot(data = alfire) +
++     geom_point(mapping = aes(x = day, y = RH,colour = Classes))
+
+```
+## rh: Relative Humidity
+
+
+
+
+## Multiple Regression testing
+
+```{r}
+
+
+i <- sample(2, nrow(alfire), replace=TRUE, prob=c(0.8, 0.2))
+
+AlTraining <- alfire[i==1,]
+
+Altest<- alfire[i==2,]
+
+fitlm <- lm(Temperature~., data=AlTraining[,1:14])
+summary(fitlm)
+
+
+```
+```{r}
+fitlm2<- lm(Temperature~.-year-month-RH, data=AlTraining)
+summary(fitlm2)
+
+
+```
+
+
+```{r}
+
+
+
+
+
+
+ypred <-predict(object = fitlm2, newdata = AlTest[,1:14])
+summary(ypred)
+
+
+
+```
+
+
+
+
+```{r}
+intercept_only <- lm(Temperature ~ 1, data=AlTraining[,1:14])
+
+all <- lm(Temperature~., data=AlTraining[,1:14])
+
+
+forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))
+```
+```{r}
+
+forward$anova
+
+```
+
+```{r}
+
+ypred_forward <-predict(object = forward, newdata = AlTest[,1:14])
+
+MAE(y_pred = ypred_forward, y_true = AlTest$Temperature)
+
+
+MSE(y_pred = ypred_forward, y_true =  AlTest$Temperature)
+
+```
+
+
+## Backward Selection
+
+```{r}
+backward <- stepAIC (all, direction='backward')
+
+
+
+```
+
+
+
+```{r}
+
+backward$anova
+
+
+```
+
+```{r}
+summary(backward)
+```
+
+
+
+```{r}
+ypred_backward <-predict(object = backward, newdata = AlTest[,1:14])
+
+MAE(y_pred = ypred_backward, y_true = AlTest$Temperature)
+
+
+MSE(y_pred = ypred_backward, y_true = AlTest$Temperature)
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

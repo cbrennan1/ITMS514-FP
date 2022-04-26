@@ -101,6 +101,23 @@ ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes
 
 # Data Analysis
 
+
+## QQplot
+```{r}
+qqnorm(alfire$Temperature, pch=2)
+qqline(alfire$Temperature, col ="green")
+
+qqnorm(alfire$Rain, pch=2)
+qqline(alfire$Rain, col ="green")
+
+qqnorm(alfire$RH, pch=2)
+qqline(alfire$RH, col ="green")
+
+qqnorm(alfire$Ws, pch=2)
+qqline(alfire$Ws, col ="green")
+```
+
+
 # Hypothesis Testing:
 ```{r}
 junemonth=subset.data.frame(forestfireregion1,forestfireregion1$month==6)
@@ -159,20 +176,7 @@ r>0.7, high correlation
 
 </h5>
 
-## QQplot
-```{r}
-qqnorm(alfire$Temperature, pch=2)
-qqline(alfire$Temperature, col ="green")
 
-qqnorm(alfire$Rain, pch=2)
-qqline(alfire$Rain, col ="green")
-
-qqnorm(alfire$RH, pch=2)
-qqline(alfire$RH, col ="green")
-
-qqnorm(alfire$Ws, pch=2)
-qqline(alfire$Ws, col ="green")
-```
 **Multiple Regression Testing Region 1**
 
 ```{r}
@@ -217,7 +221,7 @@ predict(fitLmtest1 , new)
 predict(fitLmtest1, new, interval="confidence") 
 predict(fitLmtest1, new, interval="prediction")
 ```
-## Association between the Numerical Variable and Categorical ##Variable
+## Association between the Numerical Variable and Categorical ## Variable
 
 ```{r}
 aov1 <- aov(Rain ~Classes, data=alfire)

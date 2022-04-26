@@ -100,6 +100,21 @@ ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes
 
 
 
+
+
+## Corelation
+
+<h5>
+
+r<0.3, weak correlation
+
+0.3<r<0.7, moderate correlation
+
+r>0.7, high correlation
+
+</h5>
+
+
 ** QQplot
  qqnorm(alfire$Temperature, pch=2)
 qqline(alfire$Temperature, col ="green")

@@ -98,6 +98,24 @@ boxplot(Rain~Ws,data=forestfireregion1,main="Measure of rain according to the wi
 ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes),bins = 30)
 ```
 
+
+
+** QQplot
+ qqnorm(alfire$Temperature, pch=2)
+qqline(alfire$Temperature, col ="green")
+
+qqnorm(alfire$Rain, pch=2)
+qqline(alfire$Rain, col ="green")
+
+
+qqnorm(alfire$RH, pch=2)
+qqline(alfire$RH, col ="green")
+
+
+
+
+qqnorm(alfire$Ws, pch=2)
+qqline(alfire$Ws, col ="green")
 **Multiple Regression Testing Region 1**
 ```{r}
 set.seed(420)

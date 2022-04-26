@@ -58,6 +58,10 @@ sum(duplicated(forestfireregion2))
 # Region 1 Classes
 ggplot(data = forestfireregion1) + geom_bar(mapping = aes(x = Classes))
 
+# Frequency of rain and temperature to understand them better
+as.data.frame(table(forestfireregion1$Temperature))
+as.data.frame(table(forestfireregion1$Rain
+
 #Classes compared with Wind Speed
 ggplot(data = forestfireregion1, aes(x = Ws)) +
   geom_bar(aes(fill = Classes)) 

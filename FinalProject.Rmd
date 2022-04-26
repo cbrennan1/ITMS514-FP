@@ -62,6 +62,8 @@ ggplot(data = forestfireregion1) + geom_bar(mapping = aes(x = Classes))
 as.data.frame(table(forestfireregion1$Temperature))
 as.data.frame(table(forestfireregion1$Rain
 
+# Temperature has most values concentrated in categories 31, 32, 33 and 35.
+# Rain has most values concentrated in categories 0, 0.1 and 0.3.
 #Classes compared with Wind Speed
 ggplot(data = forestfireregion1, aes(x = Ws)) +
   geom_bar(aes(fill = Classes)) 

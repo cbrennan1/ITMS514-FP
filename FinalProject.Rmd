@@ -180,16 +180,10 @@ r>0.7, high correlation
 **Multiple Regression Testing Region 1**
 
 ```{r}
-set.seed(420)
-i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
-Region1Training <- forestfireregion1[i==1,]
-Region1Testing<- forestfireregion1[i==2,]
-fitlm <- lm(Temperature~., data=Region1Training[,1:14])
-summary(fitlm)
-fitlm2<- lm(Temperature~.-year-month-RH, data=Region1Training)
-summary(fitlm2)
-ypred <-predict(object = fitlm2, newdata = Region1Testing[,1:14])
-summary(ypred)
+i <- sample(2, nrow(alfire), replace=TRUE, prob=c(0.8, 0.2))
+Region1Training <- alfire[i==1,]
+Region1Testing<- alfire[i==2,]          
+          
 ```
 **Forward Step Regression Testing Region 1**
 
@@ -212,6 +206,60 @@ ypred_backward <-predict(object = backward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 ```
+                                
+ 
+
+                         ## Response as Wind                             
+                                
+ ```{r}
+                                
+intercept_only <- lm( Ws~ 1, data=Region1Training[,1:14])
+all <- lm(Ws~., data=Region1Testing[,1:14])
+forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))                               
+                                
+                                
+ ```   
+  
+ ```{r}
+  forward$anova
+                                
+ ```                              
+```{r}    
+summary(forward)                              
+```                               
+                                
+    
+```{r}     
+ ypred_for <- predict(object = forward, newdata = Region1Testing[,1:14])
+ MAE(y_pred = ypred_for, y_true = Region1Testing$Ws)
+```                               
+  
+      
+```{r}              
+backward <- stepAIC (all, direction='backward')
+```                                 
+```{r}
+  
+backward$anova  
+```
+  
+ ```{r}
+  
+ summary(backward)
+  
+ ```
+  
+  
+ ```{r} 
+ypred_bac <- predict(object = backward, newdata = Region1Testing[,1:14])
+MAE(y_pred = ypred_bac,y_true = Region1Testing$Ws) 
+```{r}
+ 
+   ```{r}            
+MSE(y_pred = ypred_bac,y_true = Region1Testing$Ws)
+  ``` 
+  
+  
 ## Confidence and Predection Intervals
 
 ```{r}

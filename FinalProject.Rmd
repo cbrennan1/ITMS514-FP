@@ -126,3 +126,6 @@ ypred_backward <-predict(object = backward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 ```
+
+
+# Test

@@ -151,5 +151,22 @@ MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 ```
 
+## Confidence and Predection Intervals
 
+
+```{r}
+
+fitLmtest1 <- lm(FFMC~ Ws, data=alfire)
+
+new <- data.frame(Ws = 22)
+predict(fitLmtest1 , new)
+
+
+predict(fitLmtest1, new, interval="confidence") 
+
+predict(fitLmtest1, new, interval="prediction")
+
+
+
+```
 

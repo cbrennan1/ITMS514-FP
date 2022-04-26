@@ -109,7 +109,7 @@ qqline(alfire$RH, col ="green")
 qqnorm(alfire$Ws, pch=2)
 qqline(alfire$Ws, col ="green")
 ```
-
+## qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Tempreture, Rain, RH and Ws are having data, aproximatly noramlly distributed as most of the points lies on the qqline.
 
 # Hypothesis Testing:
 ```{r}

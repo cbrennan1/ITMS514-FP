@@ -26,7 +26,6 @@ library(MASS)
 **Input of both region's CSV**
 ```{r}
 forestfireregion1 <- read.csv("data/region1.csv", sep = ",") 
-forestfireregion2 <- read.csv("data/region2.csv", sep = ",") 
 ```
 
 **Data Preparation Region 1**

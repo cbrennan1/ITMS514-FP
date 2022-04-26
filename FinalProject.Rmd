@@ -65,7 +65,11 @@ ggplot(data = forestfireregion1, aes(x = month)) +
 
 #Temperature VS Classes
 ggplot(data = forestfireregion1, aes(x = Temperature)) +geom_histogram(aes(fill = Classes),bins = 30)
+
+#Rain vs Fire
+ggplot(data = forestfireregion1, aes(x = Rain)) + geom_histogram(aes(fill = Classes), bins =10, color = "black")
 ```
+# The Chances of fire are greater when less Rain Precepiration
 
 **EDA Region 1 Temperature**
 ```{r}

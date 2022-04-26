@@ -98,7 +98,7 @@ ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes
 
 ## QQplot
 ```{r}
-qqnorm(alfire$Temperature, pch=2)
+qqnorm(alfire$Temperature, pch=2) 
 qqline(alfire$Temperature, col ="green")
 
 qqnorm(alfire$Rain, pch=2)
@@ -208,10 +208,7 @@ ypred_backward <-predict(object = backward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 ```
-                                
- 
-
-                         ## Response as Wind                             
+## Response as Wind                             
                                 
  ```{r}
                                 

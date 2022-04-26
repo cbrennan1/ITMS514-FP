@@ -228,6 +228,7 @@ summary(aov2)
 ```
 
 ## Performing SVM (Support Vector Machine) Regression on forestfireregion1 dataset to predict the attribute "Classes".
+
 ## Applying SVM to the data to predict "Classes" and reporting the accuracy using 10-fold cross validation. 
 
 ```{r}

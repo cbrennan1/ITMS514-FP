@@ -168,5 +168,21 @@ predict(fitLmtest1, new, interval="prediction")
 
 
 
+
+```
+
+
+## Association between the Numerical Variable and Categorical ##Variable
+
+```{r}
+
+aov1 <- aov(Rain ~Classes, data=alfire)
+summary(aov1)
+
+
+aov2 <- aov(FFMC ~Classes, data=alfire)
+summary(aov2)
+
+
 ```
 

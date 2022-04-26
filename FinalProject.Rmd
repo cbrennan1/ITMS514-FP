@@ -175,7 +175,15 @@ r<0.3, weak correlation
 r>0.7, high correlation
 
 </h5>
+  
+  
+```{r}
+  
+cor(subset(Region1Training, select=-Classes))
+```
+  
 
+ 
 
 **Multiple Regression Testing Region 1**
 

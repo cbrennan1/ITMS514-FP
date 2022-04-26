@@ -41,17 +41,7 @@ sum(duplicated(forestfireregion1))
 ```
 > Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values.  
 
-**Data Preparation Region 2**
-```{r}
-names(forestfireregion1)[names(forestfireregion2)=="ï..day"] <- "day"
-dim(forestfireregion2)
-str(forestfireregion2)
-summary(forestfireregion2)
-head(forestfireregion2)
-sum(is.na(forestfireregion2))
-sum(duplicated(forestfireregion2))
-```
-> Region 2 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values. 
+
 
 **Bar Plots Region 1**
 ```{r}

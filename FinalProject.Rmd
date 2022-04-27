@@ -174,22 +174,17 @@ r>0.7, high correlation
 
 </h5>
   
-  
-```{r}
-  
+## Correlation of training dataset attributes except Classes.
+
+```{r}  
 cor(subset(Region1Training, select=-Classes))
 ```
-  
-
- 
-
 **Multiple Regression Testing Region 1**
 
 ```{r}
-i <- sample(2, nrow(alfire), replace=TRUE, prob=c(0.8, 0.2))
-Region1Training <- alfire[i==1,]
-Region1Testing<- alfire[i==2,]          
-          
+i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
+Region1Training <- forestfireregion1[i==1,]
+Region1Testing<- forestfireregion1[i==2,]                    
 ```
 **Forward Step Regression Testing Region 1**
 
@@ -212,76 +207,46 @@ ypred_backward <-predict(object = backward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 ```
-## Response as Wind                             
-                                
- ```{r}
-                                
+## Response as Wind                                                             
+
+**Forward Step Regression Testing Region 1**
+```{r}
 intercept_only <- lm( Ws~ 1, data=Region1Training[,1:14])
 all <- lm(Ws~., data=Region1Testing[,1:14])
-forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))                               
-                                
-                                
- ```   
-  
- ```{r}
-  forward$anova
-                                
- ```                              
-```{r}    
-summary(forward)                              
-```                               
-                                
-    
-```{r}     
- ypred_for <- predict(object = forward, newdata = Region1Testing[,1:14])
- MAE(y_pred = ypred_for, y_true = Region1Testing$Ws)
-```                               
-  
-      
+forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))                                                                
+forward$anova
+summary(forward)
+ypred_for <- predict(object = forward, newdata = Region1Testing[,1:14])
+MAE(y_pred = ypred_for, y_true = Region1Testing$Ws)
+MSE(y_pred = ypred_for, y_true = Region1Testing$Ws)
+```   
+**Backwards Step Regression Testing Region 1** 
 ```{r}              
 backward <- stepAIC (all, direction='backward')
-```                                 
-```{r}
-  
 backward$anova  
-```
-  
- ```{r}
-  
- summary(backward)
-  
- ```
-  
-  
- ```{r} 
+summary(backward)
 ypred_bac <- predict(object = backward, newdata = Region1Testing[,1:14])
-MAE(y_pred = ypred_bac,y_true = Region1Testing$Ws) 
-```{r}
- 
-   ```{r}            
-MSE(y_pred = ypred_bac,y_true = Region1Testing$Ws)
-  ``` 
- 
-             
-             
+MAE(y_pred = ypred_bac,y_true = Region1Testing$Ws)
+MSE(y_pred = ypred_bac,y_true = Region1Testing$Ws)             
+``` 
 ## According to MAE, MSE, R-Square and  Resedual Standard Error Backward stepwise model would be suitable fit over the forward stepwise model.  
   
 ## Confidence and Predection Intervals
 
 ```{r}
-fitLmtest1 <- lm(FFMC~ Ws, data=alfire)
+fitLmtest1 <- lm(FFMC~ Ws, data=forestfireregion1)
 new <- data.frame(Ws = 22)
 predict(fitLmtest1 , new)
 predict(fitLmtest1, new, interval="confidence") 
 predict(fitLmtest1, new, interval="prediction")
 ```
-## Association between the Numerical Variable and Categorical ## Variable
+## Association between the Numerical Variable and Categorical Variable
 
 ```{r}
-aov1 <- aov(Rain ~Classes, data=alfire)
+aov1 <- aov(Rain ~Classes, data=forestfireregion1)
 summary(aov1)
 
-aov2 <- aov(FFMC ~Classes, data=alfire)
+aov2 <- aov(FFMC ~Classes, data=forestfireregion1)
 summary(aov2)
 ```
 

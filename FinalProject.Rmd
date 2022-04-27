@@ -24,7 +24,7 @@ library(e1071)
 library(caret)
 ```
 
-**Input of both region's CSV**
+**Input Region 1 CSV**
 ```{r}
 forestfireregion1 <- read.csv("/Users/jaygupta/Downloads/ForestFireRegion1.csv", sep = ",") 
 ```
@@ -75,23 +75,23 @@ ggplot(data = forestfireregion1, aes(x = Rain)) + geom_histogram(aes(fill = Clas
 ```
 # The Chances of fire are greater when less Rain Precepiration
 
-**EDA Region 1 Temperature**
+**EDA For Temperature**
 ```{r}
-temperature1=forestfireregion1$Temperature
-h1=hist(temperature1,ylim=c(0,40))
+temperature=forestfireregion1$Temperature
+h1=hist(temperature,ylim=c(0,40))
 text(h1$mids,h1$counts,labels=h1$counts, adj=c(0.5, -0.5))
-hist(temperature1,main="Maximum daily temperature",xlab="Temperature in degrees Fahrenheit",xlim=c(0,40),col="darkmagenta",freq=FALSE)
+hist(temperature,main="Maximum daily temperature",xlab="Temperature in degrees Fahrenheit",xlim=c(0,40),col="darkmagenta",freq=FALSE)
 boxplot(day~Temperature,data=forestfireregion1,main="Measure of temperature per day",xlab="Temperature",ylab="Days")
 boxplot(Rain~Temperature,data=forestfireregion1,main="Measure of rain according to the temperature",xlab="Temperature",ylab="Rain")
 ggplot(data = forestfireregion1, aes(x = Temperature)) +geom_histogram(aes(fill = Classes),bins = 30)
 ```
 
-**EDA Region 1 Ws**
+**EDA For Wind Speed**
 ```{r}
-ws1=forestfireregion1$Ws
-h1=hist(ws1,ylim=c(0,40))
+ws=forestfireregion1$Ws
+h1=hist(ws,ylim=c(0,40))
 text(h1$mids,h1$counts,labels=h1$counts, adj=c(0.5, -0.5))
-hist(ws1,main="Maximum daily Wind Speed",xlab="Wind Speed",xlim=c(0,30),col="darkmagenta",freq=FALSE)
+hist(ws,main="Maximum daily Wind Speed",xlab="Wind Speed",xlim=c(0,30),col="darkmagenta",freq=FALSE)
 boxplot(day~Ws,data=forestfireregion1,main="Measure of wind speed per day",xlab="Wind Speed",ylab="Days")
 boxplot(Rain~Ws,data=forestfireregion1,main="Measure of rain according to the wind speed",xlab="Wind Speed",ylab="Rain")
 ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes),bins = 30)
@@ -195,7 +195,7 @@ Region1Testing = forestfireregion1[i==2,]
 cor(subset(Region1Training, select=-Classes))
 ```
 
-## Forward Step Regression Testing Region 1
+**Forward Step Regression Testing Temperature**
 
 ```{r}
 intercept_only <- lm(Temperature ~ 1, data=Region1Training[,1:14])
@@ -207,7 +207,7 @@ MAE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
 ```
 
-## Backwards Step Regression Testing Region 1
+**Backwards Step Regression Testing Temperature**
 
 ```{r}
 backward <- stepAIC (all, direction='backward')
@@ -220,7 +220,7 @@ MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 
 ## Response as Wind                                                             
 
-**Forward Step Regression Testing Region 1**
+**Forward Step Regression Testing Wind Speed**
 
 ```{r}
 intercept_only <- lm( Ws~ 1, data=Region1Training[,1:14])
@@ -233,7 +233,7 @@ MAE(y_pred = ypred_for, y_true = Region1Testing$Ws)
 MSE(y_pred = ypred_for, y_true = Region1Testing$Ws)
 ```   
 
-**Backwards Step Regression Testing Region 1** 
+**Backwards Step Regression Testing Wind Speed** 
 
 ```{r}              
 backward <- stepAIC (all, direction='backward')

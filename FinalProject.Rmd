@@ -24,12 +24,12 @@ library(e1071)
 library(caret)
 ```
 
-**Input Region 1 CSV**
+**Input Region CSV**
 ```{r}
 forestfireregion1 <- read.csv("/Users/jaygupta/Downloads/ForestFireRegion1.csv", sep = ",") 
 ```
 
-**Data Preparation Region 1**
+**Data Preparation Region**
 ```{r}
 names(forestfireregion1)[names(forestfireregion1)=="ï..day"] <- "day"
 dim(forestfireregion1)
@@ -40,11 +40,11 @@ sum(is.na(forestfireregion1))
 sum(duplicated(forestfireregion1))
 ```
 
-> Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values.  
+<h5> Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values. </h5>
 
 
 
-**Bar Plots Region 1**
+**Bar Plots Region**
 
 ```{r}
 # Region 1 Classes
@@ -73,7 +73,8 @@ ggplot(data = forestfireregion1, aes(x = Temperature)) +geom_histogram(aes(fill 
 #Rain vs Fire
 ggplot(data = forestfireregion1, aes(x = Rain)) + geom_histogram(aes(fill = Classes), bins =10, color = "black")
 ```
-# The Chances of fire are greater when less Rain Precepiration
+
+<h5>The Chances of fire are greater when less Rain Precepiration</h5>
 
 **EDA For Temperature**
 ```{r}
@@ -143,7 +144,7 @@ f2
 var.test(julymonth$Rain,junemonth$Rain,alternative = "two.sided",conf.level = 0.95)
 ```
 
-> The variances are not equal because the p value is much lesser than significance level and the fvalue doesn't lie between f1 and f2, hence we reject the hypothesis. 
+<h5> The variances are not equal because the p value is much lesser than significance level and the fvalue doesn't lie between f1 and f2, hence we reject the hypothesis. </h5>
 
 ## For unknown mean and unequal variances
 > Consider the hypothesis as given below,
@@ -153,7 +154,7 @@ var.test(julymonth$Rain,junemonth$Rain,alternative = "two.sided",conf.level = 0.
 ```{r}
 t.test(junemonth$Rain,julymonth$Rain,var.equal = FALSE,conf.level = 0.95)
 ```
-> We are using t.test because we have two means and the variance are unknown and are not equal. The p-value is greater than alpha i.e., 0.05. So we can accept the null hypothesis H0 and agree that the increase of total rain in the month of June is equal to the increase of total rain in the month of July.
+<h5> We are using t.test because we have two means and the variance are unknown and are not equal. The p-value is greater than alpha i.e., 0.05. So we can accept the null hypothesis H0 and agree that the increase of total rain in the month of June is equal to the increase of total rain in the month of July. <h/5>
 
 ## Hypothesis testing on one sample:
 > Consider the hypothesis as given below,

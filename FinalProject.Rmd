@@ -20,12 +20,13 @@ library(dplyr)
 library(tigerstats)
 library(MLmetrics)
 library(MASS)
-
+library(e1071)
+library(caret)
 ```
 
 **Input of both region's CSV**
 ```{r}
-forestfireregion1 <- read.csv("data/region1.csv", sep = ",") 
+forestfireregion1 <- read.csv("/Users/jaygupta/Downloads/ForestFireRegion1.csv", sep = ",") 
 ```
 
 **Data Preparation Region 1**
@@ -38,23 +39,27 @@ head(forestfireregion1)
 sum(is.na(forestfireregion1))
 sum(duplicated(forestfireregion1))
 ```
+
 > Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values.  
 
 
 
 **Bar Plots Region 1**
+
 ```{r}
 # Region 1 Classes
 ggplot(data = forestfireregion1) + geom_bar(mapping = aes(x = Classes))
 
 # Frequency of rain and temperature to understand them better
+
 as.data.frame(table(forestfireregion1$Temperature))
-as.data.frame(table(forestfireregion1$Rain
+as.data.frame(table(forestfireregion1$Rain))
 
 # Temperature has most values concentrated in categories 31, 32, 33 and 35. Only a few observations made for categories 22, 24 and 37.
 # Rain has most values concentrated in categories 0, 0.1 and 0.3. There are quite a lot of observations with less frequencies. 
 
 #Classes compared with Wind Speed
+
 ggplot(data = forestfireregion1, aes(x = Ws)) +
   geom_bar(aes(fill = Classes)) 
 
@@ -97,17 +102,17 @@ ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes
 
 ## QQplot
 ```{r}
-qqnorm(alfire$Temperature, pch=2) 
-qqline(alfire$Temperature, col ="green")
+qqnorm(forestfireregion1$Temperature, pch=2) 
+qqline(forestfireregion1$Temperature, col ="green")
 
-qqnorm(alfire$Rain, pch=2)
-qqline(alfire$Rain, col ="green")
+qqnorm(forestfireregion1$Rain, pch=2)
+qqline(forestfireregion1$Rain, col ="green")
 
-qqnorm(alfire$RH, pch=2)
-qqline(alfire$RH, col ="green")
+qqnorm(forestfireregion1$RH, pch=2)
+qqline(forestfireregion1$RH, col ="green")
 
-qqnorm(alfire$Ws, pch=2)
-qqline(alfire$Ws, col ="green")
+qqnorm(forestfireregion1$Ws, pch=2)
+qqline(forestfireregion1$Ws, col ="green")
 ```
 ## qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Tempreture, Rain, RH and Ws are having data, aproximatly noramlly distributed as most of the points lies on the qqline.
 
@@ -174,42 +179,47 @@ r>0.7, high correlation
 
 </h5>
   
+**Multiple Regression Testing Region 1**
+
+```{r}
+i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
+Region1Training = forestfireregion1[i==1,]
+Region1Testing = forestfireregion1[i==2,]                    
+```
+
 ## Correlation of training dataset attributes except Classes.
 
 ```{r}  
 cor(subset(Region1Training, select=-Classes))
 ```
-**Multiple Regression Testing Region 1**
 
-```{r}
-i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
-Region1Training <- forestfireregion1[i==1,]
-Region1Testing<- forestfireregion1[i==2,]                    
-```
-**Forward Step Regression Testing Region 1**
+## Forward Step Regression Testing Region 1
 
 ```{r}
 intercept_only <- lm(Temperature ~ 1, data=Region1Training[,1:14])
 all <- lm(Temperature~., data=Region1Training[,1:14])
 forward <- stepAIC (intercept_only, direction='forward',scope = formula(all))
 forward$anova
-ypred_forward <-predict(object = forward, newdata = Region1Testing[,1:14])
+ypred_forward = predict(object = forward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
-MSE(y_pred = ypred_forward, y_true =  Region1Testing$Temperature)
+MSE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
 ```
-**Backwards Step Regression Testing Region 1**
+
+## Backwards Step Regression Testing Region 1
 
 ```{r}
 backward <- stepAIC (all, direction='backward')
 backward$anova
 summary(backward)
-ypred_backward <-predict(object = backward, newdata = Region1Testing[,1:14])
+ypred_backward = predict(object = backward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 ```
+
 ## Response as Wind                                                             
 
 **Forward Step Regression Testing Region 1**
+
 ```{r}
 intercept_only <- lm( Ws~ 1, data=Region1Training[,1:14])
 all <- lm(Ws~., data=Region1Testing[,1:14])
@@ -220,7 +230,9 @@ ypred_for <- predict(object = forward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_for, y_true = Region1Testing$Ws)
 MSE(y_pred = ypred_for, y_true = Region1Testing$Ws)
 ```   
+
 **Backwards Step Regression Testing Region 1** 
+
 ```{r}              
 backward <- stepAIC (all, direction='backward')
 backward$anova  
@@ -229,6 +241,7 @@ ypred_bac <- predict(object = backward, newdata = Region1Testing[,1:14])
 MAE(y_pred = ypred_bac,y_true = Region1Testing$Ws)
 MSE(y_pred = ypred_bac,y_true = Region1Testing$Ws)             
 ``` 
+
 ## According to MAE, MSE, R-Square and  Resedual Standard Error Backward stepwise model would be suitable fit over the forward stepwise model.  
   
 ## Confidence and Predection Intervals
@@ -240,6 +253,7 @@ predict(fitLmtest1 , new)
 predict(fitLmtest1, new, interval="confidence") 
 predict(fitLmtest1, new, interval="prediction")
 ```
+
 ## Association between the Numerical Variable and Categorical Variable
 
 ```{r}
@@ -255,7 +269,8 @@ summary(aov2)
 ## Applying SVM to the data to predict "Classes" and reporting the accuracy using 10-fold cross validation. 
 
 ```{r}
-intrain=createDataPartition(y=forestfireregion1$Classes,p=0.7,list=F) # Creating a data partition for training and testing the dataset.
+intrain= createDataPartition(y=forestfireregion1$Classes,p=0.7,list=F) 
+# Creating a data partition for training and testing the dataset.
 training=forestfireregion1[intrain,]
 testing=forestfireregion1[-intrain,]
 any_na(forestfireregion1)
@@ -268,6 +283,7 @@ test_pred = predict(svm_Linear, newdata = testing)
 test_pred
 confusionMatrix(table(test_pred, testing$Classes))
 ```
+
 ## Using the grid search functionality when training to optimize the C parameter of the SVM.
  
 ```{r}

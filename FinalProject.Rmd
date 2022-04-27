@@ -1,5 +1,5 @@
 ---
-title: "FinalProject"
+title: "Forest Fires"
 author: "Sarvesh Kaushik, Jay Gupta, Colin Brennan"
 date: "4/27/2022"
 output: html_document

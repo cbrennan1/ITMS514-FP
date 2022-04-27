@@ -12,7 +12,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r, include=FALSE}
-
 library(ggplot2)
 library(ISLR)
 library(tidyverse)
@@ -24,7 +23,7 @@ library(MASS)
 
 **Input Region CSV**
 ```{r}
-forestfireregion1 <- read.csv("/Users/jaygupta/Downloads/ForestFireRegion1.csv", sep = ",") 
+forestfireregion1 <- read.csv("/Users/jaygupta/Desktop/ITMD 514/Final Project/ForestFireRegion1.csv", sep = ",") 
 ```
 
 **Data Preparation Region**
@@ -38,41 +37,37 @@ sum(is.na(forestfireregion1))
 sum(duplicated(forestfireregion1))
 ```
 
-<h5> Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values. </h5>
-
-
+<h5> 
+Region 1 is a data frame that contains 122 observations and 14 features.  There are no duplicate or missing values.
+</h5>
 
 **Bar Plots Region**
 
 ```{r}
 # Region 1 Classes
 ggplot(data = forestfireregion1) + geom_bar(mapping = aes(x = Classes))
-
 # Frequency of rain and temperature to understand them better
-
 as.data.frame(table(forestfireregion1$Temperature))
 as.data.frame(table(forestfireregion1$Rain))
-
 # Temperature has most values concentrated in categories 31, 32, 33 and 35. Only a few observations made for categories 22, 24 and 37.
+
 # Rain has most values concentrated in categories 0, 0.1 and 0.3. There are quite a lot of observations with less frequencies. 
 
-#Classes compared with Wind Speed
-
+# Classes compared with Wind Speed
 ggplot(data = forestfireregion1, aes(x = Ws)) +
   geom_bar(aes(fill = Classes)) 
-
-#Classes per Month
+# Classes per Month
 ggplot(data = forestfireregion1, aes(x = month)) +
   geom_bar(aes(fill = Classes)) 
-
-#Temperature VS Classes
+# Temperature vs Classes
 ggplot(data = forestfireregion1, aes(x = Temperature)) +geom_histogram(aes(fill = Classes),bins = 30)
-
-#Rain vs Fire
+# Rain vs Fire
 ggplot(data = forestfireregion1, aes(x = Rain)) + geom_histogram(aes(fill = Classes), bins =10, color = "black")
 ```
 
-<h5>The Chances of fire are greater when less Rain Precepiration</h5>
+<h5>
+The Chances of fire are greater when less Rain Precipitation
+</h5>
 
 **EDA For Temperature**
 ```{r}
@@ -103,24 +98,24 @@ ggplot(data = forestfireregion1, aes(x = Ws)) +geom_histogram(aes(fill = Classes
 ```{r}
 qqnorm(forestfireregion1$Temperature, pch=2) 
 qqline(forestfireregion1$Temperature, col ="green")
-
 qqnorm(forestfireregion1$Rain, pch=2)
 qqline(forestfireregion1$Rain, col ="red")
-
 qqnorm(forestfireregion1$RH, pch=2)
 qqline(forestfireregion1$RH, col ="blue")
-
 qqnorm(forestfireregion1$Ws, pch=2)
 qqline(forestfireregion1$Ws, col ="yellow")
 ```
 
 
-<h5> qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Tempreture, Rain, RH and Ws are having data, aproximatly noramlly distributed as most of the points lies on the qqline. </h5>
+<h5> 
+qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Temperature, Rain, RH and Ws are having data, approximately normally distributed as most of the points lies on the qqline.
+</h5>
 
 # Hypothesis Testing:
 Consider the hypothesis as given below,
 
  H0: 𝜎(junemonth$Rain) = 𝜎(julymonth$Rain)
+ 
  H1: 𝜎(junemonth$Rain) ≠ 𝜎(julymonth$Rain)
 
 ```{r}
@@ -142,28 +137,38 @@ f2
 var.test(julymonth$Rain,junemonth$Rain,alternative = "two.sided",conf.level = 0.95)
 ```
 
-<h5> The variances are not equal because the p value is much lesser than significance level and the fvalue doesn't lie between f1 and f2, hence we reject the hypothesis. </h5>
+<h5> 
+The variances are not equal because the p value is much lesser than significance level and the fvalue doesn't lie between f1 and f2, hence we reject the hypothesis. 
+</h5>
 
 ## For unknown mean and unequal variances
 > Consider the hypothesis as given below,
-> H0: 𝝻(junemonth$Rain) = 𝝻(julymonth$Rain)
-> H1: 𝝻(junemonth$Rain) ≠ 𝝻(julymonth$Rain)
+ 
+ H0: 𝝻(junemonth$Rain) = 𝝻(julymonth$Rain)
+ 
+ H1: 𝝻(junemonth$Rain) ≠ 𝝻(julymonth$Rain)
 
 ```{r}
 t.test(junemonth$Rain,julymonth$Rain,var.equal = FALSE,conf.level = 0.95)
 ```
-<h5> We are using t.test because we have two means and the variance are unknown and are not equal. The p-value is greater than alpha i.e., 0.05. So we can accept the null hypothesis H0 and agree that the increase of total rain in the month of June is equal to the increase of total rain in the month of July. <h/5>
+
+<h5> 
+We are using t.test because we have two means and the variance are unknown and are not equal. The p-value is greater than alpha i.e., 0.05. So we can accept the null hypothesis H0 and agree that the increase of total rain in the month of June is equal to the increase of total rain in the month of July. 
+<h/5>
 
 ## Hypothesis testing on one sample:
 > Consider the hypothesis as given below,
-> H0: 𝝻(RH) = 68
-> H1: 𝝻(RH) ≠ 68
+ 
+ H0: 𝝻(RH) = 68
+ 
+ H1: 𝝻(RH) ≠ 68
 
 ```{r}
 fr<- forestfireregion1 %>% subset(Classes == "fire", select= RH)
 nofr <- forestfireregion1 %>% subset(Classes == "not fire", select= RH)
 t.test(nofr, mu = 68)
 ```
+
 <h5>
 According to p value we should reject H0, when there is no fire average relative humidity would not be equal to 68.
 </h5>
@@ -180,7 +185,7 @@ r>0.7, high correlation
 
 </h5>
   
-**Multiple Regression Testing Region 1**
+**Multiple Regression Testing on Region 1**
 
 ```{r}
 i <- sample(2, nrow(forestfireregion1), replace=TRUE, prob=c(0.8, 0.2))
@@ -194,7 +199,7 @@ Region1Testing = forestfireregion1[i==2,]
 cor(subset(Region1Training, select=-Classes))
 ```
 
-**Forward Step Regression Testing Temperature**
+**Forward Step Regression Testing ~ Temperature**
 
 ```{r}
 intercept_only <- lm(Temperature ~ 1, data=Region1Training[,1:14])
@@ -206,7 +211,7 @@ MAE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
 MSE(y_pred = ypred_forward, y_true = Region1Testing$Temperature)
 ```
 
-**Backwards Step Regression Testing Temperature**
+**Backwards Step Regression Testing ~ Temperature**
 
 ```{r}
 backward <- stepAIC (all, direction='backward')
@@ -219,7 +224,7 @@ MSE(y_pred = ypred_backward, y_true = Region1Testing$Temperature)
 
 ## Response as Wind                                                             
 
-**Forward Step Regression Testing Wind Speed**
+**Forward Step Regression Testing ~ Wind Speed**
 
 ```{r}
 intercept_only <- lm( Ws~ 1, data=Region1Training[,1:14])
@@ -232,7 +237,7 @@ MAE(y_pred = ypred_for, y_true = Region1Testing$Ws)
 MSE(y_pred = ypred_for, y_true = Region1Testing$Ws)
 ```   
 
-**Backwards Step Regression Testing Wind Speed** 
+**Backwards Step Regression Testing ~ Wind Speed** 
 
 ```{r}              
 backward <- stepAIC (all, direction='backward')
@@ -243,7 +248,9 @@ MAE(y_pred = ypred_bac,y_true = Region1Testing$Ws)
 MSE(y_pred = ypred_bac,y_true = Region1Testing$Ws)             
 ``` 
 
-<h5> According to MAE, MSE, R-Square and  Resedual Standard Error Backward stepwise model would be suitable fit over the forward stepwise model.  </h5>
+<h5> 
+According to MAE, MSE, R-Square and  Residual Standard Error Backward stepwise model would be suitable fit over the forward stepwise model.  
+</h5>
   
 ## Confidence and Predection Intervals
 
@@ -255,62 +262,37 @@ predict(fitLmtest1, new, interval="confidence")
 predict(fitLmtest1, new, interval="prediction")
 ```
 
-       
-       
 ## Confidence and Predection Intervals
 
 ```{r}
 fitLmtest1 <- lm(FFMC~ Ws, data=forestfireregion1)
 new <- data.frame(Ws = 22)
-
-
 predict(fitLmtest1 , new)
 predict(fitLmtest1, new, interval="confidence") 
 predict(fitLmtest1, new, interval="prediction")
-
-
 fitLmtest2 <- lm(Temperature~ Rain, data=forestfireregion1)
 new <- data.frame(Rain = 15)
-
 predict(fitLmtest2 , new)
 predict(fitLmtest2, new, interval="confidence") 
 predict(fitLmtest2, new, interval="prediction")
-
-
-
 fitLmtest3 <- lm(RH ~ Rain, data=forestfireregion1)
 new <- data.frame(Rain = 15)
-
 predict(fitLmtest3 , new)
 predict(fitLmtest3, new, interval="confidence") 
 predict(fitLmtest3, new, interval="prediction")
-
 ```
-       
-       
-       
-       
-       
-       
-       
-       
-       
+
 ## Association between the Numerical Variable and Categorical Variable
 
 ```{r}
 aov1 <- aov(Rain ~Classes, data=forestfireregion1)
 summary(aov1)
-
 aov2 <- aov(FFMC ~Classes, data=forestfireregion1)
 summary(aov2)
-
-
 aov2 <- aov(RH ~Classes, data=forestfireregion1)
 summary(aov2)
-
-
 aov2 <- aov(Temperature ~Classes, data=forestfireregion1)
 summary(aov2)
-
 ```
 
+<div align="center">**`Thank you`!**</div>

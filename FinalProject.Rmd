@@ -314,43 +314,5 @@ summary(aov2)
 aov2 <- aov(Temperature ~Classes, data=forestfireregion1)
 summary(aov2)
 
-
-
-
-
 ```
 
-## Performing SVM (Support Vector Machine) Regression on forestfireregion1 dataset to predict the attribute "Classes".
-
-## Applying SVM to the data to predict "Classes" and reporting the accuracy using 10-fold cross validation. 
-
-```{r}
-intrain= createDataPartition(y=forestfireregion1$Classes,p=0.7,list=F) 
-# Creating a data partition for training and testing the dataset.
-training=forestfireregion1[intrain,]
-testing=forestfireregion1[-intrain,]
-any_na(forestfireregion1)
-training[["Classes"]]=factor(training[["Classes"]])
-trctrl = trainControl(method = "repeatedcv", number = 10, repeats = 3)
-svm_Linear = train(Classes ~., data = training, method = "svmLinear",
-trControl=trctrl,preProcess = c("center", "scale"),tuneLength = 10)
-svm_Linear
-test_pred = predict(svm_Linear, newdata = testing)
-test_pred
-confusionMatrix(table(test_pred, testing$Classes))
-```
-
-## Using the grid search functionality when training to optimize the C parameter of the SVM.
- 
-```{r}
-grid <- expand.grid(C = c(0,0.01, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2,5))
-svm_Linear_Grid = train(Classes ~., data = training, method = "svmLinear", trControl=trctrl, preProcess = c("center", "scale"), tuneGrid = grid,
-tuneLength = 10)
-svm_Linear_Grid
-plot(svm_Linear_Grid)
-## We chose the C value as displayed above and the final C value used for optimal model was C = 5.
-test_pred_grid = predict(svm_Linear_Grid, newdata = testing)
-test_pred_grid
-confusionMatrix(table(test_pred_grid, testing$Classes))
-## The final model accuracy is 94.29% for the test set.
-```

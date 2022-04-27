@@ -114,7 +114,9 @@ qqline(forestfireregion1$RH, col ="blue")
 qqnorm(forestfireregion1$Ws, pch=2)
 qqline(forestfireregion1$Ws, col ="yellow")
 ```
-## qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Tempreture, Rain, RH and Ws are having data, aproximatly noramlly distributed as most of the points lies on the qqline.
+
+
+<h5> qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Tempreture, Rain, RH and Ws are having data, aproximatly noramlly distributed as most of the points lies on the qqline. </h5>
 
 # Hypothesis Testing:
 Consider the hypothesis as given below,

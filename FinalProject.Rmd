@@ -20,8 +20,6 @@ library(dplyr)
 library(tigerstats)
 library(MLmetrics)
 library(MASS)
-library(e1071)
-library(caret)
 ```
 
 **Input Region CSV**

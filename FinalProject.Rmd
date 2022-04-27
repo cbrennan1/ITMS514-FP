@@ -106,13 +106,13 @@ qqnorm(forestfireregion1$Temperature, pch=2)
 qqline(forestfireregion1$Temperature, col ="green")
 
 qqnorm(forestfireregion1$Rain, pch=2)
-qqline(forestfireregion1$Rain, col ="green")
+qqline(forestfireregion1$Rain, col ="red")
 
 qqnorm(forestfireregion1$RH, pch=2)
-qqline(forestfireregion1$RH, col ="green")
+qqline(forestfireregion1$RH, col ="blue")
 
 qqnorm(forestfireregion1$Ws, pch=2)
-qqline(forestfireregion1$Ws, col ="green")
+qqline(forestfireregion1$Ws, col ="yellow")
 ```
 ## qqplot gives us the idea about the distribution of data. In the above graphs it can be seen that Tempreture, Rain, RH and Ws are having data, aproximatly noramlly distributed as most of the points lies on the qqline.
 

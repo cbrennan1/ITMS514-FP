@@ -254,6 +254,46 @@ predict(fitLmtest1, new, interval="confidence")
 predict(fitLmtest1, new, interval="prediction")
 ```
 
+       
+       
+## Confidence and Predection Intervals
+
+```{r}
+fitLmtest1 <- lm(FFMC~ Ws, data=forestfireregion1)
+new <- data.frame(Ws = 22)
+
+
+predict(fitLmtest1 , new)
+predict(fitLmtest1, new, interval="confidence") 
+predict(fitLmtest1, new, interval="prediction")
+
+
+fitLmtest2 <- lm(Temperature~ Rain, data=forestfireregion1)
+new <- data.frame(Rain = 15)
+
+predict(fitLmtest2 , new)
+predict(fitLmtest2, new, interval="confidence") 
+predict(fitLmtest2, new, interval="prediction")
+
+
+
+fitLmtest3 <- lm(RH ~ Rain, data=forestfireregion1)
+new <- data.frame(Rain = 15)
+
+predict(fitLmtest3 , new)
+predict(fitLmtest3, new, interval="confidence") 
+predict(fitLmtest3, new, interval="prediction")
+
+```
+       
+       
+       
+       
+       
+       
+       
+       
+       
 ## Association between the Numerical Variable and Categorical Variable
 
 ```{r}
@@ -262,6 +302,19 @@ summary(aov1)
 
 aov2 <- aov(FFMC ~Classes, data=forestfireregion1)
 summary(aov2)
+
+
+aov2 <- aov(RH ~Classes, data=forestfireregion1)
+summary(aov2)
+
+
+aov2 <- aov(Temperature ~Classes, data=forestfireregion1)
+summary(aov2)
+
+
+
+
+
 ```
 
 ## Performing SVM (Support Vector Machine) Regression on forestfireregion1 dataset to predict the attribute "Classes".

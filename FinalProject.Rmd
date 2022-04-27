@@ -244,7 +244,7 @@ MAE(y_pred = ypred_bac,y_true = Region1Testing$Ws)
 MSE(y_pred = ypred_bac,y_true = Region1Testing$Ws)             
 ``` 
 
-## According to MAE, MSE, R-Square and  Resedual Standard Error Backward stepwise model would be suitable fit over the forward stepwise model.  
+<h5> According to MAE, MSE, R-Square and  Resedual Standard Error Backward stepwise model would be suitable fit over the forward stepwise model.  </h5>
   
 ## Confidence and Predection Intervals
 
